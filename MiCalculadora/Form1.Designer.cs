@@ -150,7 +150,7 @@
             binario.TabStop = true;
             binario.Text = "binario";
             binario.UseVisualStyleBackColor = true;
-            //binario.MouseClick += Binario_MouseClick;
+            binario.MouseClick += Binario_MouseClick;
            
             // 
             // decima
@@ -164,7 +164,7 @@
             decima.TabStop = true;
             decima.Text = "decimal";
             decima.UseVisualStyleBackColor = true;
-            //decima.MouseClick += Decima_MouseClick;
+            decima.MouseClick += Decima_MouseClick;
             
             // 
             // resultado

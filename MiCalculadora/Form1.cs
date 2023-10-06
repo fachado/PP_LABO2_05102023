@@ -1,85 +1,80 @@
+using Entidades;
 
 
-namespace MiCalculadora
+namespace TuProyecto
 {
-    public partial class Form1 : Form
+    public partial class CalculadoraForm : Form
     {
-        
+        private Calculadora calculadora;
 
-        public Form1()
+        public CalculadoraForm()
         {
             InitializeComponent();
-
+            this.calculadora = new Calculadora("Nombre y Apellido");
+            this.cmbOperacion.DataSource = new char[] { '+', '-', '*', '/' };
         }
 
-       
-
-        private bool EsNumeroValido(string valor)
+        private void btnOperar_Click(object sender, EventArgs e)
         {
-            double resultado;
-            return double.TryParse(valor, out resultado);
-        }
-        /*
-                private void Decima_MouseClick(object sender, EventArgs e)
-                {
-
-
-                    if (!string.IsNullOrEmpty(label1.Text))
-                    {
-                        setResultado();
-                    }
-        
-                }
-        
-                private void Binario_MouseClick(object sender, EventArgs e)
-                {
-
-
-                    if (!string.IsNullOrEmpty(label1.Text))
-                    {
-                        setResultado();
-                    }
-
-                }
-        */
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-            comboBox1.Items.Add("+");
-            comboBox1.Items.Add("-");
-            comboBox1.Items.Add("/");
-            comboBox1.Items.Add("*");
-
-
-            comboBox1.SelectedIndex = 0;
+            char operador = (char)this.cmbOperacion.SelectedItem;
+            this.calculadora.PrimerOperando = this.GetOperador(this.txtPrimerOperando.Text);
+            this.calculadora.SegundoOperando = this.GetOperador(this.txtSegundoOperando.Text);
+            this.calculadora.Calcular(operador);
+            this.calculadora.ActualizaHistorialDeOperaciones(operador);
+            this.lblResultado.Text = $"Resultado: {calculadora.Resultado.Valor}";
+            this.MostrarHistorial();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnLimpiar_Click(object sender, EventArgs e)
         {
-
+            this.calculadora.EliminarHistorialDeOperaciones();
+            this.txtPrimerOperando.Text = string.Empty;
+            this.txtSegundoOperando.Text = string.Empty;
+            this.lblResultado.Text = "Resultado:";
+            this.MostrarHistorial();
         }
 
-        private void limpiar_Click(object sender, EventArgs e)
+        private void MostrarHistorial()
         {
-
-            textBox1.Clear();
-            textBox2.Clear();
-
-
-            label1.Text = "";
+            this.lstHistorial.DataSource = null;
+            this.lstHistorial.DataSource = this.calculadora.Operaciones;
         }
 
-        private void cerrar_click(object sender, EventArgs e)
+        private Numeración GetOperador(string texto)
         {
+            // Implementa la lógica para convertir el texto en una instancia de Numeración
+            // Puede ser SistemaDecimal, SistemaBinario, u otro, según el sistema actual
+            // de la calculadora.
+            // Debes implementar esta lógica según tu definición de Numeración y sistemas.
+            // Por ejemplo, podrías usar un switch para determinar el sistema y crear la instancia correcta.
+            return null;
+        }
 
-            DialogResult result = MessageBox.Show("¿Desea cerrar la calculadora?", "Confirmación",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        private void radioBtnBinario_CheckedChanged(object sender, EventArgs e)
+        {
+            Calculadora.Sistema = ESistema.Binario;
+        }
 
+        private void radioBtnDecimal_CheckedChanged(object sender, EventArgs e)
+        {
+            Calculadora.Sistema = ESistema.Decimal;
+        }
 
+        private void btnCerrar_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("¿Desea cerrar la calculadora?", "Cierre", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 this.Close();
+            }
+        }
+
+        private void CalculadoraForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("¿Desea cerrar la calculadora?", "Cierre", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.No)
+            {
+                e.Cancel = true;
             }
         }
     }
